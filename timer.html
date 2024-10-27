@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #0d1a26, #092a3b); /* Dark gradient background */
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: #ffffff;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #cccccc;
+            font-size: 1em;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .countdown-box {
+            background-color: #004c6d;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            width: 100px;
+            font-size: 2em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .countdown-box:nth-child(1) { background-color: #005f73; } /* Different colors for each box */
+        .countdown-box:nth-child(2) { background-color: #0a9396; }
+        .countdown-box:nth-child(3) { background-color: #94d2bd; }
+        .countdown-box:nth-child(4) { background-color: #ee9b00; }
+
+        .label {
+            font-size: 0.5em;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+
+        .email-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .email-input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            font-size: 1em;
+            width: 250px;
+        }
+
+        .submit-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff6700;
+            color: #ffffff;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #ff4500;
+        }
+    </style>
+</head>
+<body>
+    <h1>We Are Coming Soon</h1>
+    <p>Stay tuned for something amazing! Subscribe to our newsletter to get the latest updates.</p>
+    <div class="countdown-container">
+        <div class="countdown-box">
+            <span id="eventStartDays">0</span>
+            <div class="label">Days</div>
+        </div>
+        <div class="countdown-box">
+            <span id="eventStartHours">0</span>
+            <div class="label">Hours</div>
+        </div>
+        <div class="countdown-box">
+            <span id="eventStartMinutes">0</span>
+            <div class="label">Minutes</div>
+        </div>
+        <div class="countdown-box">
+            <span id="eventStartSeconds">0</span>
+            <div class="label">Seconds</div>
+        </div>
+    </div>
+
+    <div class="email-container">
+        <input type="email" class="email-input" placeholder="Enter your email address">
+        <button class="submit-button">Subscribe</button>
+    </div>
+
+    <script>
+        const milestones = {
+            eventStart: new Date("2024-11-05T00:00:00").getTime(),
+        };
+
+        function startCountdown(targetDate, daysId, hoursId, minutesId, secondsId, timeOffset = 0) {
+            function updateCountdown() {
+                const now = new Date().getTime() + timeOffset;
+                const timeLeft = targetDate - now;
+
+                if (timeLeft > 0) {
+                    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                    document.getElementById(daysId).textContent = days;
+                    document.getElementById(hoursId).textContent = hours;
+                    document.getElementById(minutesId).textContent = minutes;
+                    document.getElementById(secondsId).textContent = seconds;
+                } else {
+                    document.getElementById(daysId).textContent = "0";
+                    document.getElementById(hoursId).textContent = "0";
+                    document.getElementById(minutesId).textContent = "0";
+                    document.getElementById(secondsId).textContent = "0";
+                    clearInterval(countdownInterval);
+                }
+            }
+
+            updateCountdown(); // Initial call to avoid delay
+            const countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        // Start countdown for event start
+        startCountdown(milestones.eventStart, "eventStartDays", "eventStartHours", "eventStartMinutes", "eventStartSeconds");
+    </script>
+</body>
+</html>
+
+<!-- server.js- JAVASCRPIT CODE
+
+
+const express = require("express");
+const app = express();
+const port = 3000;
+
+// Serve static files from the "public" directory
+app.use(express.static("public"));
+
+// Endpoint to get the current server time in milliseconds
+app.get("/server-time", (req, res) => {
+    const serverTime = new Date().getTime(); // Get current time in milliseconds
+    res.json({ serverTime }); // Send the time as a JSON response
+});
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+}); -->

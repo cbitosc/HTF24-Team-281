@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Details</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #004c6d;
+        }
+
+        .container {
+            display: flex;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 800px;
+            justify-content: space-between;
+        }
+
+        .result-container,
+        .tech-stack-container {
+            width: 45%;
+            text-align: left;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .member-box,
+        .tech-stack-container label {
+            display: block;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-message {
+            color: red;
+        }
+
+        .tech-stack-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="result-container" id="resultContainer">
+            <h2>Team Details</h2>
+            <div id="teamDetails"></div>
+            <div id="errorMessage" class="error-message"></div>
+        </div>
+
+        <div class="tech-stack-container">
+            <h2>Select your known Tech-stacks </h2>
+            <form id="techForm">
+                <label><input type="checkbox" name="tech" value="Web Development"> Web Development</label>
+                <label><input type="checkbox" name="tech" value="Machine Learning"> Machine Learning</label>
+                <label><input type="checkbox" name="tech" value="Data Science"> Data Science</label>
+                <label><input type="checkbox" name="tech" value="Cloud Computing"> Cloud Computing</label>
+                <label><input type="checkbox" name="tech" value="Cybersecurity"> Cybersecurity</label>
+                <label><input type="checkbox" name="tech" value="IoT"> IoT</label>
+                <button type="button" onclick="submitTechStack()">Submit Technologies</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function displayTeamDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const teamName = urlParams.get('team');
+            const teams = JSON.parse(localStorage.getItem('teams') || '{}');
+            const team = teams[teamName];
+
+            if (!team) {
+                document.getElementById('errorMessage').textContent = "Team not found.";
+                return;
+            }
+
+            const teamDetails = document.getElementById('teamDetails');
+            teamDetails.innerHTML = `<div class="member-box"><strong>Team Leader:</strong><br>
+                                      Name: ${team.leader.name}<br>
+                                      Email: ${team.leader.email}<br>
+                                      Phone: ${team.leader.phone}<br>
+                                      Institute: ${team.leader.institute}</div>`;
+
+            if (team.members.length > 0) {
+                team.members.forEach((member, index) => {
+                    teamDetails.innerHTML += `<div class="member-box"><strong>Member ${index + 1}:</strong><br>
+                                              Name: ${member.name}<br>
+                                              Email: ${member.email}<br>
+                                              Phone: ${member.phone}<br>
+                                              Institute: ${member.institute}</div>`;
+                });
+            } else {
+                teamDetails.innerHTML += `<div class="member-box"><strong>No Members Added</strong></div>`;
+            }
+        }
+
+        function submitTechStack() {
+            const techForm = document.getElementById('techForm');
+            const selectedTech = Array.from(techForm.elements.tech)
+                .filter(tech => tech.checked)
+                .map(tech => tech.value);
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const teamName = urlParams.get('team');
+            const teams = JSON.parse(localStorage.getItem('teams') || '{}');
+
+            if (selectedTech.length === 0) {
+                document.getElementById('errorMessage').textContent = "Please select at least one technology.";
+                return;
+            }
+
+            teams[teamName].techStack = selectedTech; // Store selected technologies
+            localStorage.setItem('teams', JSON.stringify(teams));
+
+            alert("Technologies submitted successfully!");
+        }
+
+        // Display team details on page load
+        displayTeamDetails();
+    </script>
+</body>
+
+</html>
